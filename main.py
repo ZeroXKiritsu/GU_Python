@@ -1,39 +1,61 @@
 # 1
-def func(x,y):
-    d = x / y
-    return d
+from sys import argv
+from functools import reduce
+from itertools import count
+from itertools import cycle
+from math import factorial
 
-print(func(4,2))
+def cash():
+    script_name,hours,cash,premiya = argv
+    pay = hours * cash
+    return pay + premiya
+
+print(f'Размер заработной платы составил: {cash()}')
+
 # 2
-def func_1(**kwargs):
-   print(f'{kwargs}')
-
-func_1(name= 'Karen', surname='Gasparyan', birth=1997, city='Moscow', email='ZeroXKiitsu@ya.ru', phone_number='+79855790356')
-
-# 3 
-def my_func(x, y,z):
-    return sum(max(x,y,z))
-
+def greater():
+    a = input().split()
+    for i in range(len(a)-1):
+        n = int(a[i])
+        i += 1
+         m = list(int(a[i]))
+         if m > n:
+            n = m
+            print(m, end=' ')
+            
+# 3
+print(f'Числа от 20 до 240 кратные 20 или 21 - {[el for el in range(20, 241) if el % 20 == 0 or el % 21 == 0]}')
 # 4
-def my_pow(x,y):
-     return 1 / x ** abs(y)
-    
+my_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+new_list = [el for el in my_list if my_list.count(el) < 2]
+print(new_list)
 # 5
-def char_input():
-i = input("Введите число").split(" ")
-a = 0
-while a<len(i):
-    i[a] = int(i[a])
-    a = a + 1
-k = 0
-for j in i:
-        k += j
-print(k)
+def gen(el_p, el):
+    return el_p * el
+
+print(f'Список четных значений {[el for el in range(99, 1001) if el % 2 == 0]}')
+print(f'Результат перемножения всех элементов списка {reduce(my_func, [el for el in range(99, 1001) if el % 2 == 0])}')
 
 # 6
-def int_func(**kwargs):
-    kwargs = input("введите текст").split(" ")
-    kwargs.lower()
-    return kwargs.title()
+for el in count(int(input('Введите стартовое число '))):
+    print(el)
+    
+my_list = [True, 'ABC', 123, None,6.6]
+for el in cycle(my_list):
+    print(el)
+    
+# 7 
+def generator():
+    for el in count(1):
+        yield factorial(el)
+        
+ gen = generator()
 
-print(int_func(‘text’))
+x = 0
+for i in gen:
+    if x < 15:
+        print(i)
+        x += 1
+    else:
+        break 
+    
