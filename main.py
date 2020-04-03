@@ -1,61 +1,92 @@
+import json
 # 1
-from sys import argv
-from functools import reduce
-from itertools import count
-from itertools import cycle
-from math import factorial
-
-def cash():
-    script_name,hours,cash,premiya = argv
-    pay = hours * cash
-    return pay + premiya
-
-print(f'Размер заработной платы составил: {cash()}')
-
+with open('test.txt', 'w') as my_file:
+    line = input('Введите текст \n')
+    my_file.writelines(line)
+    if not line:
+        break
+    content = my_file.readlines()
+    print(content)
+    
 # 2
-def greater():
-    a = input().split()
-    for i in range(len(a)-1):
-        n = int(a[i])
-        i += 1
-         m = list(int(a[i]))
-         if m > n:
-            n = m
-            print(m, end=' ')
-            
-# 3
-print(f'Числа от 20 до 240 кратные 20 или 21 - {[el for el in range(20, 241) if el % 20 == 0 or el % 21 == 0]}')
-# 4
-my_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-new_list = [el for el in my_list if my_list.count(el) < 2]
-print(new_list)
+with open('test.txt', 'r') as my_file:
+    for i in my_file.readlines():
+        print(f'Количестов строк {i}')
+     for j in my_file.read():
+        print(f'Количестов слов {j}')
+
+# 3 
+ with open('test.txt', 'r') as my_file:
+   oklad = []
+   sred = []
+   my_list = my_file.read().split('\n')
+   for i in my_list:
+         i = i.split()
+            if int(i[1]) < 20000:
+                sred.append(i[0])
+     oklad.append(i[1])
+print(f'Оклад меньше 20.000 {sred}, средний оклад {sum(map(int, oklad)) / len(oklad)}')
+
+# 4 
+my_dict = {'One' : 'Один', 'Two' : 'Два', 'Three' : 'Три', 'Four' : 'Четыре'}
+new_file = []
+with open('test.txt', 'r') as my_file:
+     for i in my_file:
+        i = i.split(' ', 1)
+        new_file.append(my_dict[i[0]] + '  ' + i[1])
+    print(new_file)
+ 
+with open('test_2.txt', 'w') as my_file:
+    my_file.writelines(new_file)
+
 # 5
-def gen(el_p, el):
-    return el_p * el
+def summary():
+    try:
+        with open('test.txt', 'w+') as my_file:
+            line = input('Введите цифры через пробел \n')
+            my_file.writelines(line)
+            my_number = line.split()
 
-print(f'Список четных значений {[el for el in range(99, 1001) if el % 2 == 0]}')
-print(f'Результат перемножения всех элементов списка {reduce(my_func, [el for el in range(99, 1001) if el % 2 == 0])}')
+            print(sum(map(int, my_number)))
+    except IOError:
+        print('Ошибка в файле')
+    except ValueError:
+        print('Неправильно набран номер. Ошибка ввода-вывода')
+summary()
 
-# 6
-for el in count(int(input('Введите стартовое число '))):
-    print(el)
+# 6 
+sub = {}
+with open('test.txt', 'r') as my_file:
+    for line in my_file:
+        subject, lecture, practice, lab = line.split()
+        sub[subject] = int(lecture) + int(practice) + int(lab)
+    print(f'Общее количество часов по предмету - \n {sub}')
     
-my_list = [True, 'ABC', 123, None,6.6]
-for el in cycle(my_list):
-    print(el)
-    
-# 7 
-def generator():
-    for el in count(1):
-        yield factorial(el)
-        
- gen = generator()
-
-x = 0
-for i in gen:
-    if x < 15:
-        print(i)
-        x += 1
+ # 7 
+profit = {}
+j = {}
+proove = 0
+average = 0
+i = 0
+with open('test.txt', 'r') as my_file:
+    for line in my_file:
+        name, firm, earning, damage = line.split()
+        profit[name] = int(earning) - int(damage)
+        if profit.setdefault(name) >= 0:
+            proove = proove + profit.setdefault(name)
+            i += 1
+    if i != 0:
+        average = proove / i
+        print(f'Прибыль средняя - {average:.2f}')
     else:
-        break 
-    
+        print(f'Прибыль средняя - отсутсвует. Все работают в убыток')
+    j = {'средняя прибыль': round(average)}
+    profit.update(j)
+    print(f'Прибыль каждой компании - {profit}')
+
+with open('test.json', 'w') as my_js:
+    json.dump(profit, my_js)
+
+    js_str = json.dumps(profit)
+    print(f'Создан файл с расширением json со следующим содержимым: \n '
+          f' {js_str}') 
