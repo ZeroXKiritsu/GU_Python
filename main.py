@@ -1,138 +1,89 @@
-from time import sleep
+from abc import ABC, abstractmethod
 # 1
-class TrafficLight:
-    __color = ["красный", "желтый", "зеленый"]
+class Matrix:
+     def __init__(self, my_list):
+        self.my_list = my_list
+        
+     def __str__(self):
+        return '\n'.join(map(str, self.my_list))
+    
+      def __add__(self, other):
+        for i in range(len(self.my_list)):
+            for i_2 in range(len(other.my_list[i])):
+                self.my_list[i][i_2] = self.my_list[i][i_2] + other.my_list[i][i_2]
+        return Matrix.__str__(self)
+    
+   
+m = Matrix([[-1, 0, 1], [-1, 0, 1], [0, 1, -1], [1, 1, -1]])
+new_m = Matrix([[-2, 0, 2], [-2, 0, 2], [0, 2, -2], [2, 2, -7]])
+print(m + new_m)
 
-    def running(self):
-        i = 0
-        while i != 3:
-            print(TrafficLight.__color[i])
-        if i == 0:
-            sleep(7)
-        elif i == 1:
-            sleep(2)
-        elif i == 2:
-            sleep(5)
-        i += 1
-
-
-trafic = TrafficLight()
-trafic.running()
 # 2
-class Road:
-    def __init__(self,length,width):
-        self._length = length
-        self._width = width
-        self.weight = 25
-        self.height = 5
+class Clothes(ABC):
 
-    def mass(self):
-        asphalt = self._length * self._width * self.weight * self.height / 1000
-        print(f"Для покрытия всего дорожного полотна необходимо {round(asphalt)} массы асфальта")
+    def __init__(self, param):
+        self.param = param
 
+    @property
+    def consumption(self):
+        return f'Сумма затраченной ткани равна: {self.param / 6.5 + 0.5 + 2 * self.param + 0.3 :.2f}'
 
-road = Road(5000,20)
-road.mass()
-# 3 
-class Worker:
-    def __init__(self, name, last_name, position, wage, bonus):
-        self.name = name
-        self.last_name = last_name
-        self.position = position
-        self._income = {"wage": int(wage), "bonus": int(bonus)}
+    @abstractmethod
+    def abstract(self):
+        return 'Smth vary abstract'
 
 
-class Postion(Worker):
-    def __init__(self, name, last_name, position, wage, bonus):
-        super().__init__(name, last_name, position, wage, bonus)
+class Coat(Clothes):
+    def consumption(self):
+        return f'Для пошива пальто нужно: {self.param / 6.5 + 0.5 :.2f} ткани'
 
-    def get_full_name(self):
-        return self.name + ' ' + self.last_name
-
-    def get_total_income(self):
-        return self._income["wage"] + self._income["bonus"]
+    def abstract(self):
+        return 'Smth vary abstract second'
 
 
-pos = Postion('Kirill', 'Medved', 'QA', 100, 200)
-print(pos.get_full_name(), pos.get_total_income())
-# 4 
-class Car:
-    def __init__(self,name,speed,color,is_police = False):
-        self.name = name
-        self.speed = speed
-        self.color = color
-        self.is_police = is_police
+class Costume(Clothes):
+    def consumption(self):
+        return f'Для пошива костюма нужно: {2 * self.param + 0.3 :.2f} ткани'
 
-    def go(self):
-        return  f"The {self.name} went."
-
-    def stop(self):
-        return f"\n The {self.name} has stoped"
-
-    def turn(self,direction):
-        return  f"\n The {self.name}  turned {direction}"
-
-    def show_speed(self):
-        return f"\n You speed is {self.speed}"
-
-class TownCar(Car):
-    def show_speed(self):
-        if self.speed > 60:
-            return f"\n Your speed is higher than allow! Your speed is {self.speed}"
-        else:
-            return  f"Speed of {self.name} is normal"
-
-class SportCar(Car):
-    pass
-
-class WorkCar(Car):
-    def show_speed(self):
-        if self.speed > 40:
-            return f"\n Your speed is higher than allow! Your speed is {self.speed}"
-        else:
-            return  f"Speed of {self.name} is normal"
-
-class PoliceCar(Car):
-    pass
-
-town = TownCar('Audi', 70, 'blue', False)
-print('1:\n' + town.go(), town.show_speed(), town.turn('left'), town.turn('right'), town.stop())
-
-sport = SportCar('AudiRS', 170, 'red', False)
-print('2:\n' + sport.go(), sport.show_speed(), sport.turn('left'), sport.stop())
-
-work = WorkCar('WAZ', 30, 'red', False)
-print('3:\n' + work.go(), work.show_speed(), work.turn('right'), work.stop())
-
-police = PoliceCar('Kia', 100, 'yellow', True)
-print('4:\n' + work.go(), work.show_speed(), work.turn('right'), work.stop())
-# 5
-class Stationery:
-    def __init__(self, title):
-        self.title = title
-
-    def draw(self):
-        return f'Запуск отрисовки'
+    def abstract(self):
+        pass
 
 
-class Pen(Stationery):
-    def draw(self):
-        return f'Запуск отрисовки {self.title}'
+coat = Coat(400)
+costume = Costume(55)
+print(coat.consumption)
+print(costume.consumption())
+print(coat.abstract())
+# 3
+class Cell:
+    def __init__(self, quantity):
+        self.quantity = int(quantity)
+
+    def __add__(self, other):
+        return f'Две клетки - хорошо, а одна большая - лучше! Размер клетки равен: {self.quantity + other.quantity}'
+
+    def __sub__(self, other):
+        sub = self.quantity - other.quantity
+        return f'Клеточка стала меньше, теперь она равна: {sub} клеточкам' if sub > 0 else 'Клетка исчезла :('
+
+    def __truediv__(self, other):
+        return self.quantity // other.quantity
+
+    def __mul__(self, other):
+        return self.quantity * other.quantity
+
+    def make_order(self, row):
+        result = ''
+        for i in range(int(self.quantity / row)):
+            result += '*' * row + '\n'
+        result += '*' * (self.quantity % row) + '\n'
+        return result
 
 
-class Pencil(Stationery):
-    def draw(self):
-        return f'Запуск отрисовки {self.title}'
-
-
-class Handle(Stationery):
-    def draw(self):
-        return f'Запуск отрисовки {self.title}'
-
-
-pen = Pen('ручкой')
-print(pen.draw())
-pencil = Pencil('карандашем')
-print(pencil.draw())
-handle = Handle('маркером')
-print(handle.draw())
+cell = Cell(24)
+cell_2 = Cell(2)
+print(cell + cell_2)
+print(cell - cell_2)
+print(cell / cell_2)
+print(cell * cell_2)
+print(cell.make_order(7))
